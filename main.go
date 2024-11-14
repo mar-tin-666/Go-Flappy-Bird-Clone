@@ -48,7 +48,7 @@ var (
 type Pipe struct {
 	x      float64
 	height float64
-	passed bool // Indicates if the bird has passed this pipe
+	passed bool
 }
 
 // Game structure
@@ -58,7 +58,7 @@ type Game struct {
 	pipes         []Pipe
 	score         int
 	gameOver      bool
-	started       bool // Game starts on the first space press
+	started       bool
 	nextPipeSpawn float64
 }
 
@@ -73,9 +73,12 @@ func (g *Game) reset() {
 	g.nextPipeSpawn = screenWidth
 }
 
+// Initialize a random number generator
+var rng = rand.New(rand.NewSource(time.Now().UnixNano()))
+
 // Spawns a new pipe with a random gap position
 func (g *Game) spawnPipe() {
-	topHeight := float64(rand.Intn(screenHeight-pipeGap-birdSize*2) + birdSize)
+	topHeight := float64(rng.Intn(screenHeight-pipeGap-birdSize*2) + birdSize)
 	g.pipes = append(g.pipes, Pipe{x: screenWidth, height: topHeight, passed: false})
 }
 
@@ -191,7 +194,6 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 }
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
 	game := &Game{}
 	game.reset()
 
